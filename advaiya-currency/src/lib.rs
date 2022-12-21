@@ -1,4 +1,4 @@
-type Hash = Vec<u8>;
+type BlockHash = Vec<u8>;
 type Address = String;
 
 // Credit: https://stackoverflow.com/a/44378174/2773837

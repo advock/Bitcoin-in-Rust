@@ -1,3 +1,6 @@
+use std::{hash::Hash, ptr::hash};
+mod hashable;
+
 use blockchainlib::*;
 fn main() {
     let mut block = Block::new(
@@ -6,7 +9,7 @@ fn main() {
         vec![0; 32],
         0,
         "Genesis block".to_owned(),
-        0x0fffffffffffffffffffffffffffffff,
+        0x000fffffffffffffffffffffffffffff,
     );
 
     block.hash = block.hash();

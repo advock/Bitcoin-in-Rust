@@ -4,7 +4,7 @@ mod hashable;
 use blockchainlib::*;
 fn main() {
     let mut block = Block::new(
-        i,
+        0,
         0,
         vec![0; 32],
         0,

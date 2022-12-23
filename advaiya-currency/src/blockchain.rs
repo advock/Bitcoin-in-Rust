@@ -1,5 +1,6 @@
 use super::*;
 use std::collections::HashSet;
+#[derive(Debug)]
 pub enum BlockValadiationErr {
     MismatchedIndex,
     InvalidHash,

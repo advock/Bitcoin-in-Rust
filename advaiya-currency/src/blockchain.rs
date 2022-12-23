@@ -35,12 +35,48 @@ impl Blockchain {
                 return Err(BlockValadiationErr::InvalidGensisBlock);
             }
         }
-        if let Some((coinbase, transaction)) = block.transactions.split_first() {
+        if let Some((coinbase, transactions)) = block.transactions.split_first() {
             if !coinbase.is_coinbase() {
                 return Err(BlockValadiationErr::InvalidCoinbasetransction);
             }
+
             let mut block_spend: HashSet<Hash> = HashSet::new();
+            let mut block_created: HashSet<Hash> = HashSet::new();
+
+            let mut total_fee = 0;
+
+            for transaction in transactions {
+                let input_hashes = transaction.input_hashes();
+                if !(&input_hashes - &self.unspeand_outputs).is_empty()
+                    || !(&input_hashes & &block_spend).is_empty()
+                {
+                    return Err(BlockValadiationErr::invalidInput);
+                }
+                let input_value = transaction.input_value();
+                let output_value = transaction.output_value();
+
+                if output_value > input_value {
+                    return Err(BlockValadiationErr::InsufficientInputValue);
+                }
+                let fee = input_value - output_value;
+
+                total_fee += fee;
+
+                block_spend.extend(input_hashes);
+                block_created.extend(transaction.output_hashes())
+            }
+            if coinbase.output_value() < total_fee {
+                return Err(BlockValadiationErr::InvalidCoinbasetransction);
+            } else {
+                block_created.extend(coinbase.output_hashes());
+            }
+
+            self.unspeand_outputs
+                .retain(|output| !block_spend.contains(output));
+            self.unspeand_outputs.extend(block_created);
         }
+        self.blocks.push(block);
+
         Ok(())
     }
 }

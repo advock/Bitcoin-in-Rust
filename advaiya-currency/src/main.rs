@@ -3,37 +3,31 @@ mod hashable;
 
 use blockchainlib::*;
 fn main() {
-    let mut block = Block::new(
+    let mut genesis_block = Block::new(
         0,
         now(),
         vec![0; 32],
-        0,
-        "another block".to_owned(),
+        vec![Transaction {
+            inputs: vec![],
+            outputs: vec![
+                transaction::Output {
+                    to_addr: "Alice".to_owned(),
+                    value: 50,
+                },
+                transaction::Output {
+                    to_addr: "Bob".to_owned(),
+                    value: 7,
+                },
+            ],
+        }],
         0x000fffffffffffffffffffffffffffff,
     );
-    block.mine();
+    genesis_block.mine();
+    let mut last_hashh = genesis_block.hash.clone();
 
-    let mut blockchain = Blockchain {
-        blocks: vec![block],
-    };
-    let mut last_hashh = block.hash.clone();
+    let mut blockchain = Blockchain::new();
 
-    for i in 1..=10 {
-        let mut block = Block::new(
-            i,
-            now(),
-            last_hashh,
-            0,
-            "another block".to_owned(),
-            0x000fffffffffffffffffffffffffffff,
-        );
-        block.mine();
-
-        println!("{:?}", &block);
-        last_hashh = block.hash.clone();
-
-        let mut blockchain = Blockchain {
-            blocks: vec![block],
-        };
-    }
+    blockchain
+        .update_with_block(genesis_block)
+        .expect("failed to add genesis block");
 }

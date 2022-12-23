@@ -1,4 +1,4 @@
-type BlockHash = Vec<u8>;
+type Hash = Vec<u8>;
 type Address = String;
 
 // Credit: https://stackoverflow.com/a/44378174/2773837
@@ -78,5 +78,3 @@ mod hashable;
 pub use crate::hashable::Hashable;
 mod blockchain;
 pub use crate::blockchain::Blockchain;
-// pub mod transaction;
-// pub use crate::transaction::Transaction;

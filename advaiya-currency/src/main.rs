@@ -5,7 +5,7 @@ use blockchainlib::*;
 fn main() {
     let mut block = Block::new(
         0,
-        0,
+        now(),
         vec![0; 32],
         0,
         "another block".to_owned(),
@@ -21,7 +21,7 @@ fn main() {
     for i in 1..=10 {
         let mut block = Block::new(
             i,
-            0,
+            now(),
             last_hashh,
             0,
             "another block".to_owned(),
